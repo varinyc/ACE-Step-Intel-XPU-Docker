@@ -12,6 +12,7 @@ Run full-song local music generation on **Intel Arc GPUs** under **Linux Docker*
 | **Detailed guide** | **[README-DOCKER-XPU.md](./README-DOCKER-XPU.md)** |
 
 Upstream supports XPU on Windows and ships **NVIDIA CUDA Docker only**. This repository adds the missing path.
+EDIT: Also working now on a B60
 
 ---
 
