@@ -94,15 +94,15 @@ RUN uv venv /app/.venv --python python3.11 \
     && uv pip install --upgrade pip \
     && uv pip install -e . --no-deps \
     && uv pip install -r requirements-xpu.txt \
-    && uv pip install --pre --force-reinstall \
-         torch torchaudio torchvision \
-         --index-url https://download.pytorch.org/whl/nightly/xpu \
+    && uv pip install --force-reinstall \
+         "torch==2.10.0+xpu" \
+         "torchaudio==2.10.0+xpu" \
+         "torchvision==0.25.0+xpu" \
+         --index-url https://download.pytorch.org/whl/xpu \
     && uv pip uninstall torchao -y || true \
-    && ( uv pip install --pre --force-reinstall --no-deps "torchao>=0.16.0" \
-           --index-url https://download.pytorch.org/whl/nightly/xpu \
-         || uv pip install --pre --force-reinstall --no-deps "torchao>=0.16.0" \
-           --index-url https://download.pytorch.org/whl/xpu \
-         || uv pip install --pre --force-reinstall --no-deps "torchao>=0.16.0" ) \
+    && uv pip install --force-reinstall --no-deps \
+         "torchao==0.16.0+xpu" \
+         --index-url https://download.pytorch.org/whl/xpu \
     && uv pip install --no-deps "bitsandbytes>=0.48.0" \
     && uv pip install "lycoris-lora" "soundfile>=0.13.1" \
     && uv pip install "PyWavelets>=1.4.0" \
