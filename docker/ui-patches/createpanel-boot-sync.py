@@ -18,46 +18,7 @@ GOOD_LM_STATE = (
     "|| 'acestep-5Hz-lm-1.7B');"
 )
 
-BOOT_EFFECT = '''
-  // [XPU-BOOT-SYNC] Align Gradio LM/DiT with sticky UI selection once on mount
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const lm =
-          (typeof localStorage !== 'undefined' && localStorage.getItem('ace-lmModel')) ||
-          lmModel ||
-          '';
-        const dit =
-          (typeof localStorage !== 'undefined' && localStorage.getItem('ace-model')) ||
-          selectedModel ||
-          '';
-        if (lm) {
-          const r = await fetch('/api/generate/switch-lm', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ lm_model_path: lm }),
-          });
-          const d = await r.json().catch(() => ({}));
-          if (!cancelled) console.log('[boot-sync LM]', d.loaded_lm_model || d.message || r.status);
-        }
-        if (dit && String(dit).startsWith('acestep-')) {
-          const r2 = await fetch('/api/generate/switch-dit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ model: dit }),
-          });
-          const d2 = await r2.json().catch(() => ({}));
-          if (!cancelled) console.log('[boot-sync DiT]', d2.loaded_model || d2.message || r2.status);
-        }
-      } catch (e) {
-        console.warn('[boot-sync]', e);
-      }
-    })();
-    return () => { cancelled = true; };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-'''
+BOOT_EFFECT = ''
 
 
 def repair_lm_model_state(text: str) -> str:
@@ -124,15 +85,15 @@ def main() -> None:
         print("ERROR: broken pattern still present after repair", file=sys.stderr)
         sys.exit(1)
 
-    if MARKER not in text:
-        m = re.search(r"\n  useEffect\(", text)
-        if m:
-            text = text[: m.start()] + "\n" + BOOT_EFFECT + text[m.start() :]
-        else:
-            text = text + "\n" + BOOT_EFFECT
-        print(f"OK boot-sync effect in {path}")
-    else:
-        print("boot-sync effect already present")
+#    if MARKER not in text:
+#        m = re.search(r"\n  useEffect\(", text)
+#        if m:
+#            text = text[: m.start()] + "\n" + BOOT_EFFECT + text[m.start() :]
+#        else:
+#            text = text + "\n" + BOOT_EFFECT
+#        print(f"OK boot-sync effect in {path}")
+#    else:
+#        print("boot-sync effect already present")
 
     path.write_text(text)
     print("createpanel-boot-sync complete")
