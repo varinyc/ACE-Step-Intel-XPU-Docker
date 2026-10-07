@@ -26,6 +26,11 @@ HELPERS = r'''
 import asyncio
 from loguru import logger
 
+# API Key storage (set via setup_api_routes)
+_api_key: Optional[str] = None
+_api_key_lock = Lock()
+
+
 _KNOWN_DIT_MODELS = (
     "acestep-v15-turbo",
     "acestep-v15-base",
